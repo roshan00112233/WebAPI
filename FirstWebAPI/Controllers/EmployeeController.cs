@@ -19,28 +19,77 @@ namespace FirstWebAPI.Controllers
         [HttpGet]
         public IActionResult GetAllEmployees()
         {
-            var employees = _context.tbl_E.ToList(); // Fetch data from database
+            var employees = _context.Employees.ToList(); // Fetch data from database
             return Ok(employees);
         }
 
         [HttpPost]
-        public IActionResult AddEmployee([FromBody] Employee emp)
+        public IActionResult AddEmployee([FromBody] EmployeeRequest emp)
         {
-            if(!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
-            }
 
+                if (emp == null || emp.EmployeeColl == null || !emp.EmployeeColl.Any())
+                {
+                    return NotFound("Invalid employee data");
+                }
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+                foreach (var employee in emp.EmployeeColl)
+                {
+                    employee.CreateBy = 1;
+                    _context.Employees.Add(employee);
+                }
 
-            if (emp == null)
-            
-                return BadRequest("Invalid employee data");
-
-                _context.tbl_E.Add(emp);
                 _context.SaveChanges();
 
-                return Ok(new { message = "Employee Added Successfully" });
 
+                return Ok(new { message = "Employee Added Successfully", total = emp.EmployeeColl.Count });
+
+            }
+            catch (Exception ee)
+            {
+                return StatusCode(500, new { message = "error occured while adding", error = ee.Message });
+            }
         }
+
+        [HttpPut("{id}" )]
+        public IActionResult UpdateEmpoyee(int id, [FromBody] Employee updatedEmployee)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var existingemp = _context.Employees.FirstOrDefault(e => e.EmployeeId == id);
+
+                if (existingemp == null)
+                {
+                    return NotFound(new { message = $"the id {id} couldn't be found" });
+                }
+
+                existingemp.FirstName = updatedEmployee.FirstName;
+                existingemp.Gender = updatedEmployee.Gender;
+                existingemp.Religion = updatedEmployee.Religion;
+                existingemp.PersnalContactNo = updatedEmployee.PersnalContactNo;
+                existingemp.EmailId = updatedEmployee.EmailId;
+                existingemp.CreateBy = 1; // Updating CreateBy manually for now
+
+                _context.SaveChanges();
+
+                return Ok(new { message = "updated successfully", id = existingemp.EmployeeId });
+            }
+            catch(Exception ee)
+            {
+                return StatusCode(500, new { message = "error while updating", error = ee.Message });
+            }
+        }
+
+
+
     }
 }

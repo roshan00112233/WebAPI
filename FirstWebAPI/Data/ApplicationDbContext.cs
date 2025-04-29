@@ -9,8 +9,8 @@ namespace FirstWebAPI.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         { }
-        public DbSet<Employee> tbl_E { get; set; }
-        public DbSet<Student> tbl_S { get; set; }
+        public DbSet<Employee> Employees { get; set; }
+       
       
     }
 }

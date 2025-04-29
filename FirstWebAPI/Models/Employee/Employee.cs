@@ -1,8 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Azure;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FirstWebAPI.Models
 {
+    public class EmployeeRequest
+    {
+        public List<Employee> EmployeeColl { get; set; } = new List<Employee>();
+    }
     [Table("tbl_Employee")]
     public class Employee
     {
@@ -15,13 +20,15 @@ namespace FirstWebAPI.Models
         public int? Gender { get; set; }
 
         [MaxLength(100)]
-        public string? Religion { get; set; }   
+        public string Religion { get; set; }   
         
         [MaxLength(15)]
         public string? PersnalContactNo { get; set; }
 
         [MaxLength(30)]
-        public string? EmailId { get; set; }          // NULL in DB → must use nullable
+        public string EmailId { get; set; }         
+        public int? CreateBy { get; set; }         
 
     }
+   
 }
