@@ -55,7 +55,7 @@ namespace FirstWebAPI.Controllers
             }
         }
 
-        [HttpPut("{id}" )]
+        [HttpPut("{id}")]
         public IActionResult UpdateEmpoyee(int id, [FromBody] Employee updatedEmployee)
         {
             try
@@ -83,12 +83,35 @@ namespace FirstWebAPI.Controllers
 
                 return Ok(new { message = "updated successfully", id = existingemp.EmployeeId });
             }
-            catch(Exception ee)
+            catch (Exception ee)
             {
                 return StatusCode(500, new { message = "error while updating", error = ee.Message });
             }
         }
+        [HttpDelete("{id}")]
+        public IActionResult DeleteEmployee(int id)
+        {
+            try
+            {
+                var beData = _context.Employees.FirstOrDefault(e => e.EmployeeId == id);
 
+                if (beData == null)
+                {
+                    return NotFound(new { message = $"the id {id} couldn't be found" });
+                }
+
+                _context.Employees.Remove(beData);
+                _context.SaveChanges();
+
+                return Ok(new { message = "deleted successfully", Employeeid = id });
+            }
+            catch (Exception EE)
+            {
+                return StatusCode(500, new { message = " error while deleting", error = EE.Message });
+            }
+
+
+        }
 
 
     }
