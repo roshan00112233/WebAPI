@@ -1,0 +1,24 @@
+# Visual Studio
+.vs/
+.vscode/
+*.user
+*.suo
+
+# Build Results
+bin/
+obj/
+*.dll
+*.exe
+*.pdb
+
+# Others
+*.log
+*.dbmdl
+*.db
+*.mdf
+*.ldf
+*.cache
+
+# OS files
+Thumbs.db
+.DS_Store
